@@ -1,0 +1,42 @@
+[package]
+name = "dji-log-viewer"
+version = "0.1.0"
+authors = ["Luc Vauvillier <luc.vauvillier@gmail.com>"]
+edition = "2021"
+repository = "https://github.com/lvauvillier/dji-log-viewer"
+
+
+[dependencies]
+log = "0.4"
+serde = { version = "1", features = ["derive"] }
+dji-log-parser = { version = "0.5.2", features = ["native-async"] }
+
+
+egui = "0.28.1"
+egui_plot = "0.28.1"
+eframe = { version = "0.28", default-features = false, features = [
+    "default_fonts",
+    "glow",
+    "persistence",
+] }
+rfd = "0.14"
+
+# Only for native
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+env_logger = "0.10"
+futures = "0.3"
+
+# Only for WASM
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen-futures = "0.4"
+
+# to access the DOM (to hide the loading text)
+[target.'cfg(target_arch = "wasm32")'.dependencies.web-sys]
+version = "0.3.4"
+
+[profile.release]
+opt-level = 2 # fast and small wasm
+
+# Optimize all dependencies even in debug builds:
+[profile.dev.package."*"]
+opt-level = 2
